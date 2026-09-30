@@ -8,10 +8,10 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
     return view('welcome');
-});
+})->name('home');
 
-Route::get('/pasien', [PatientController::class, 'index']);
-Route::get('/pasien/{id}', [PatientController::class, 'show']);
+Route::get('/pasien', [PatientController::class, 'index'])->name('pasien.index');
+Route::get('/pasien/{id}', [PatientController::class, 'show'])->name('pasien.show');
 
 Route::get('/dokter', [DoctorController::class, 'index'])->name('dokter.index');
 Route::get('/poli', [PoliController::class, 'index'])->name('poli.index');
