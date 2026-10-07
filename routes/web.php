@@ -18,3 +18,9 @@ Route::get('/poli', [PoliController::class, 'index'])->name('poli.index');
 
 Route::get('/jadwal', [ScheduleController::class, 'index'])->name('jadwal.index');
 Route::get('/jadwal/{hari}', [ScheduleController::class, 'show']);
+
+
+use App\Http\Controllers\DashboardController;
+
+Route::get('/dashboard', [DashboardController::class, 'index'])
+    ->name('dashboard');

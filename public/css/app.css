@@ -1,0 +1,22 @@
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+}
+
+nav {
+    padding: 12px;
+    background: #e8f1f2;
+}
+
+nav a {
+    margin-right: 12px;
+}
+
+main {
+    padding: 20px;
+}
+
+footer {
+    padding: 12px;
+    text-align: center;
+}
