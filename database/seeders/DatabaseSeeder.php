@@ -13,6 +13,7 @@ class DatabaseSeeder extends Seeder
     {
         $this->call([
             DoctorSeeder::class,
+            PoliSeeder::class, // Masukkan ke dalam array call
         ]);
     }
 }

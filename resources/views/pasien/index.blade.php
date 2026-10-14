@@ -28,3 +28,9 @@
     </tbody>
 </table>
 @endsection
+
+<form action="{{ route('pasien.destroy', $patient->id) }}" method="POST">
+    @csrf
+    @method('DELETE')
+    <button type="submit" onclick="return confirm('Hapus data pasien?')">Hapus</button>
+</form>

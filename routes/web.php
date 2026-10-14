@@ -7,6 +7,10 @@ use App\Http\Controllers\PatientController;
 use App\Http\Controllers\PoliController;
 use App\Http\Controllers\ScheduleController;
 
+
+Route::resource('pasien', PatientController::class);
+Route::resource('poli', PoliController::class);
+
 Route::get('/', function () {
     return view('welcome');
 });
