@@ -12,5 +12,14 @@ class doctor extends Model
         'specialization',
         'phone',
         'is_active',
+        'poli_id', 
     ];
+
+public function poli()
+{
+    return $this->belongsTo(Poli::class);
+}
+public function registrations() {
+    return $this->hasMany(Registration::class);
+}
 }

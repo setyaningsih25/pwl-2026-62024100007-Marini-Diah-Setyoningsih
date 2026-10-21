@@ -24,7 +24,7 @@
                     <td>{{ $doctor->name }}</td>
                     <td>{{ $doctor->specialization }}</td>
                     <td>{{ $doctor->phone ?? '-' }}</td>
-                    <td>
+                    <td>{{ $doctor->poli?->name ?? 'Tidak ada poli' }}</td>[cite: 23]
                         @if ($doctor->is_active)
                             Aktif
                         @else

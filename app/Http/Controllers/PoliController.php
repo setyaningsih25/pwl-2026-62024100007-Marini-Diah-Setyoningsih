@@ -36,8 +36,10 @@ class PoliController extends Controller
 
     public function show(Poli $poli)
     {
+        $poli->load('doctors');
         return view('poli.show', compact('poli'));
     }
+    
 
     public function edit(Poli $poli)
     {
