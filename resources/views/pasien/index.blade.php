@@ -29,8 +29,37 @@
 </table>
 @endsection
 
-<form action="{{ route('pasien.destroy', $patient->id) }}" method="POST">
-    @csrf
-    @method('DELETE')
-    <button type="submit" onclick="return confirm('Hapus data pasien?')">Hapus</button>
-</form>
+@extends('layouts.app')   {{-- sesuaikan dengan layout Anda --}}
+
+@section('content')
+<table border="1" cellpadding="6">
+    <thead>
+        <tr>
+            <th>No. RM</th>
+            <th>Nama</th>
+            <th>Gender</th>
+            <th>Aksi</th>
+        </tr>
+    </thead>
+    <tbody>
+        @forelse ($patients as $patient)
+            <tr>
+                <td>{{ $patient->medical_record_number }}</td>
+                <td>{{ $patient->name }}</td>
+                <td>{{ $patient->gender }}</td>
+                <td>
+                    <form action="{{ route('pasien.destroy', $patient->id) }}" method="POST">
+                        @csrf
+                        @method('DELETE')
+                        <button type="submit" onclick="return confirm('Hapus data pasien?')">Hapus</button>
+                    </form>
+                </td>
+            </tr>
+        @empty
+            <tr><td colspan="4">Belum ada data pasien.</td></tr>
+        @endforelse
+    </tbody>
+</table>
+
+{{ $patients->links() }}
+@endsection
