@@ -15,6 +15,8 @@ Route::resource('dokter', DoctorController::class);
 
 Route::get('/', function () {
     return view('welcome');
+    
+    
 });
 
 Route::get('/dashboard', [DashboardController::class, 'index'])
@@ -29,3 +31,4 @@ Route::get('/pendaftaran', [RegistrationController::class, 'index'])
 
 Route::get('/jadwal', [ScheduleController::class, 'index']);
 Route::get('/jadwal/{hari}', [ScheduleController::class, 'show']);
+Route::redirect('/registrasi', '/pendaftaran');

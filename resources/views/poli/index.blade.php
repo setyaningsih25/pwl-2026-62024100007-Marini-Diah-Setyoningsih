@@ -1,54 +1,46 @@
-<!DOCTYPE html>
-<html lang="id">
-<head>
-    <meta charset="UTF-8">
-    <title>Daftar Poli</title>
-</head>
-<body>
-    <h1>Daftar Poli Sistem Informasi Klinik</h1>
+@extends('layouts.app')
+@section('title', 'Data Poli')
 
-    @if (session('success'))
-        <div style="color: green; margin-bottom: 10px;">
-            {{ session('success') }}
-        </div>
-    @endif
+@section('content')
+<h1>Data Poli</h1>
+<a href="{{ route('poli.create') }}" class="btn btn-primary mb-3">Tambah Poli</a>
 
-    <p><a href="{{ route('poli.create') }}">+ Tambah Poli Baru</a></p>
-
-    <table border="1" cellpadding="8" cellspacing="0">
-        <thead>
+<table class="table table-bordered table-striped">
+    <thead>
+        <tr>
+            <th>No.</th>
+            <th>Kode Poli</th>
+            <th>Nama Poli</th>
+            <th>Deskripsi</th>
+            <th>Status</th>
+            <th>Aksi</th>
+        </tr>
+    </thead>
+    <tbody>
+        @forelse ($polis as $poli)
             <tr>
-                <th>No</th>
-                <th>Kode</th>
-                <th>Nama Poli</th>
-                <th>Deskripsi</th>
-                <th>Status</th>
-                <th>Aksi</th>
+                <td>{{ $loop->iteration }}</td>
+                <td>{{ $poli->code }}</td>
+                <td>{{ $poli->name }}</td>
+                <td>{{ $poli->description ?? '-' }}</td>
+                <td>
+                    <span class="badge {{ $poli->is_active ? 'text-bg-success' : 'text-bg-secondary' }}">
+                        {{ $poli->is_active ? 'Aktif' : 'Tidak Aktif' }}
+                    </span>
+                </td>
+                <td>
+                    <a href="{{ route('poli.show', $poli->id) }}" class="btn btn-info btn-sm">Detail</a>
+                    <a href="{{ route('poli.edit', $poli->id) }}" class="btn btn-warning btn-sm">Edit</a>
+                    <form action="{{ route('poli.destroy', $poli->id) }}" method="POST" class="d-inline">
+                        @csrf
+                        @method('DELETE')
+                        <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Hapus poli ini?')">Hapus</button>
+                    </form>
+                </td>
             </tr>
-        </thead>
-        <tbody>
-            @forelse ($polis as $poli)
-                <tr>
-                    <td>{{ $loop->iteration }}</td>
-                    <td>{{ $poli->code }}</td>
-                    <td>{{ $poli->name }}</td>
-                    <td>{{ $poli->description ?? '-' }}</td>
-                    <td>{{ $poli->is_active ? 'Aktif' : 'Non-Aktif' }}</td>
-                    <td>
-                        <a href="{{ route('poli.edit', $poli->id) }}">Edit</a>
-                        <form action="{{ route('poli.destroy', $poli->id) }}" method="POST" style="display:inline;">
-                            @csrf
-                            @method('DELETE')
-                            <button type="submit" onclick="return confirm('Yakin ingin menghapus data ini?')">Hapus</button>
-                        </form>
-                    </td>
-                </tr>
-            @empty
-                <tr>
-                    <td colspan="6">Belum ada data poli.</td>
-                </tr>
-            @endforelse
-        </tbody>
-    </table>
-</body>
-</html>
+        @empty
+            <tr><td colspan="6" class="text-center">Belum ada data poli.</td></tr>
+        @endforelse
+    </tbody>
+</table>
+@endsection

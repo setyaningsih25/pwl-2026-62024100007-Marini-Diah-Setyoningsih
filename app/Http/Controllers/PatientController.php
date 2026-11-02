@@ -25,7 +25,7 @@ class PatientController extends Controller
             $query->where('gender', $request->gender);
         }
 
-        $allowedSorts = ['name', 'created_at'];
+        $allowedSorts = ['name', 'medical_record_number', 'created_at'];
 
         $sort = in_array($request->sort, $allowedSorts)
             ? $request->sort
@@ -37,7 +37,7 @@ class PatientController extends Controller
 
         $patients = $query
             ->orderBy($sort, $direction)
-            ->paginate(2)
+            ->paginate(10)
             ->withQueryString();
 
         return view('pasien.index', compact('patients'));

@@ -7,13 +7,15 @@ use Illuminate\Database\Seeder;
 class DatabaseSeeder extends Seeder
 {
     /**
-     * Seed the application's database.
+     * Urutan penting: Poli -> Doctor (butuh poli_id) -> Patient -> Registration.
      */
     public function run(): void
     {
         $this->call([
+            PoliSeeder::class,
             DoctorSeeder::class,
-            PoliSeeder::class, // Masukkan ke dalam array call
+            PatientSeeder::class,
+            RegistrationSeeder::class,
         ]);
     }
 }

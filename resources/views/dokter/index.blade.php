@@ -1,42 +1,111 @@
 @extends('layouts.app')
 
-@section('title', 'Data Dokter')
-
 @section('content')
-    <h1>Data Dokter</h1>
+<div class="card">
+    <div class="card-header" style="display: flex; justify-content: space-between; align-items: center;">
+        <h3 class="card-title" style="margin: 0;">Data Dokter</h3>
+        <a href="{{ route('dokter.create') }}" style="background-color: #007bff; color: white; padding: 6px 12px; text-decoration: none; border-radius: 4px;">+ Tambah Dokter</a>
+    </div>
 
-    <table border="1" cellpadding="8" cellspacing="0">
-        <thead>
-            <tr>
-                <th>No</th>
-                <th>Kode Dokter</th>
-                <th>Nama</th>
-                <th>Spesialisasi</th>
-                <th>Telepon</th>
-                <th>Status</th>
-            </tr>
-        </thead>
-        <tbody>
-            @forelse ($doctors as $doctor)
+    @if (session('success'))
+        <div style="background-color: #d4edda; color: #155724; padding: 10px; margin: 15px; border-radius: 4px;">
+            {{ session('success') }}
+        </div>
+    @endif
+
+    <!-- Form Search, Filter & Sorting -->
+    <div style="padding: 15px; background: #f8f9fa; border-bottom: 1px solid #dee2e6;">
+        <form method="GET" action="{{ route('dokter.index') }}" style="display: flex; gap: 10px; flex-wrap: wrap;">
+            <input type="text" name="search" value="{{ request('search') }}" placeholder="Cari nama/kode dokter..." style="padding: 6px 10px; border: 1px solid #ced4da; border-radius: 4px; flex: 1; min-width: 200px;">
+
+            <select name="poli_id" style="padding: 6px 10px; border: 1px solid #ced4da; border-radius: 4px;">
+                <option value="">-- Semua Poli --</option>
+                @foreach ($polis as $poli)
+                    <option value="{{ $poli->id }}" @selected(request('poli_id') == $poli->id)>{{ $poli->name }}</option>
+                @endforeach
+            </select>
+
+            <select name="is_active" style="padding: 6px 10px; border: 1px solid #ced4da; border-radius: 4px;">
+                <option value="">-- Semua Status --</option>
+                <option value="1" @selected(request('is_active') === '1')>Aktif</option>
+                <option value="0" @selected(request('is_active') === '0')>Tidak Aktif</option>
+            </select>
+
+            <select name="sort" style="padding: 6px 10px; border: 1px solid #ced4da; border-radius: 4px;">
+                <option value="name" @selected(request('sort') === 'name')>Urut: Nama</option>
+                <option value="doctor_code" @selected(request('sort') === 'doctor_code')>Urut: Kode</option>
+            </select>
+
+            <select name="direction" style="padding: 6px 10px; border: 1px solid #ced4da; border-radius: 4px;">
+                <option value="asc" @selected(request('direction') !== 'desc')>A-Z</option>
+                <option value="desc" @selected(request('direction') === 'desc')>Z-A</option>
+            </select>
+
+            <button type="submit" style="background-color: #28a745; color: white; border: none; padding: 6px 14px; border-radius: 4px; cursor: pointer; font-weight: bold;">Filter</button>
+            <a href="{{ route('dokter.index') }}" style="background-color: #6c757d; color: white; padding: 6px 14px; text-decoration: none; border-radius: 4px; display: inline-block; font-weight: bold;">Reset</a>
+        </form>
+    </div>
+
+    @if (request()->hasAny(['search', 'poli_id', 'is_active']))
+        <p style="margin: 10px 15px 0;">Menampilkan hasil sesuai pencarian/filter yang dipilih.</p>
+    @endif
+
+    <div class="card-body table-responsive p-0">
+        <table class="table table-bordered text-nowrap" style="width: 100%;">
+            <thead>
                 <tr>
-                    <td>{{ $loop->iteration }}</td>
-                    <td>{{ $doctor->doctor_code }}</td>
-                    <td>{{ $doctor->name }}</td>
-                    <td>{{ $doctor->specialization }}</td>
-                    <td>{{ $doctor->phone ?? '-' }}</td>
-                    <td>{{ $doctor->poli?->name ?? 'Tidak ada poli' }}</td>[cite: 23]
-                        @if ($doctor->is_active)
-                            Aktif
-                        @else
-                            Tidak Aktif
-                        @endif
-                    </td>
+                    <th style="width: 50px;">No.</th>
+                    <th>Kode Dokter</th>
+                    <th>Nama Dokter</th>
+                    <th>Spesialisasi</th>
+                    <th>Poli</th>
+                    <th>No. Telepon</th>
+                    <th>Status</th>
+                    <th style="width: 180px; text-align: center;">Aksi</th>
                 </tr>
-            @empty
-                <tr>
-                    <td colspan="6">Belum ada data dokter.</td>
-                </tr>
-            @endforelse
-        </tbody>
-    </table>
+            </thead>
+            <tbody>
+                @forelse ($doctors as $index => $doctor)
+                    <tr>
+                        <td>{{ $doctors->firstItem() + $index }}</td>
+                        <td>{{ $doctor->doctor_code }}</td>
+                        <td>
+                            <a href="{{ route('dokter.show', $doctor->id) }}" style="color: #007bff; text-decoration: none; font-weight: bold;">{{ $doctor->name }}</a>
+                        </td>
+                        <td>{{ $doctor->specialization }}</td>
+                        <td>{{ $doctor->poli->name ?? '-' }}</td>
+                        <td>{{ $doctor->phone ?? '-' }}</td>
+                        <td>
+                            @if ($doctor->is_active)
+                                <span style="color: #28a745; font-weight: bold;">Aktif</span>
+                            @else
+                                <span style="color: #dc3545; font-weight: bold;">Tidak Aktif</span>
+                            @endif
+                        </td>
+                        <td style="text-align: center;">
+                            <a href="{{ route('dokter.show', $doctor->id) }}" style="color: #17a2b8; margin-right: 6px; text-decoration: none; font-weight: bold;">Detail</a>
+                            <a href="{{ route('dokter.edit', $doctor->id) }}" style="color: #ffc107; margin-right: 6px; text-decoration: none; font-weight: bold;">Edit</a>
+                            <form action="{{ route('dokter.destroy', $doctor->id) }}" method="POST" style="display:inline;">
+                                @csrf
+                                @method('DELETE')
+                                <button type="submit" onclick="return confirm('Hapus data dokter ini?')" style="background: none; border: none; color: #dc3545; cursor: pointer; font-weight: bold;">Hapus</button>
+                            </form>
+                        </td>
+                    </tr>
+                @empty
+                    <tr>
+                        <td colspan="8" style="text-align: center; padding: 20px; color: #6c757d;">Data dokter tidak ditemukan. Ubah pencarian/filter atau klik Reset.</td>
+                    </tr>
+                @endforelse
+            </tbody>
+        </table>
+    </div>
+
+    <div style="padding: 15px;">
+        {{ $doctors->links() }}
+        <p style="font-size: 14px; color: #6c757d; margin-top: 5px;">
+            Menampilkan {{ $doctors->count() }} dari {{ $doctors->total() }} data dokter.
+        </p>
+    </div>
+</div>
 @endsection

@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-
 use App\Models\Poli;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
@@ -11,7 +10,8 @@ class PoliController extends Controller
 {
     public function index()
     {
-        $polis = Poli::all();
+        $polis = Poli::orderBy('code')->get();
+
         return view('poli.index', compact('polis'));
     }
 
@@ -38,9 +38,9 @@ class PoliController extends Controller
     public function show(Poli $poli)
     {
         $poli->load('doctors');
+
         return view('poli.show', compact('poli'));
     }
-    
 
     public function edit(Poli $poli)
     {

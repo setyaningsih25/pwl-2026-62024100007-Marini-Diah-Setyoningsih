@@ -6,32 +6,21 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
-    /**
-     * Run the migrations.
-     */
     public function up(): void
     {
         Schema::create('registrations', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('patient_id')->constrained('patients')->cascadeOnDelete();
+            $table->foreignId('doctor_id')->constrained('doctors')->cascadeOnDelete();
+            $table->date('registration_date');
+            $table->string('complaint')->nullable();
+            $table->string('status')->default('waiting');
             $table->timestamps();
         });
     }
 
-    /**
-     * Reverse the migrations.
-     */
     public function down(): void
     {
         Schema::dropIfExists('registrations');
-        Schema::create('registrations', function (Blueprint $table) {
-    $table->id();
-    $table->foreignId('patient_id')->constrained('patients')->cascadeOnDelete();
-    $table->foreignId('doctor_id')->constrained('doctors')->cascadeOnDelete();
-    $table->date('registration_date');
-    $table->string('complaint')->nullable();
-    $table->string('status')->default('waiting');
-    $table->timestamps();
-});
     }
-
 };
